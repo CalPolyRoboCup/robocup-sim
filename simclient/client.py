@@ -2,11 +2,14 @@ import sys
 
 import pygame
 
-from simclient.comms.sim_connection import SimConnection
+from simclient.comms.sim_receiver import SimReceiver
+from simclient.comms.sim_sender import SimSender
 from simclient.robot_manager import RobotManager
 from simclient.ball import Ball
 from simclient.field import Field
 from simclient.team import Team
+
+from proto.grSim_Packet_pb2 import grSim_Packet
 
 
 class Client:
@@ -29,9 +32,12 @@ class Client:
         """
         self.width = width
         self.height = height
+        self.team = team
         self.scale = Client.DEFAULT_SCALE
-        self.connection = SimConnection()
-        self.connection.open()
+        self.receiver = SimReceiver()
+        self.receiver.open()
+        self.sender = SimSender()
+        self.sender.connect()
         self.yellow_bots = RobotManager(Team.YELLOW)
         self.blue_bots = RobotManager(Team.BLUE)
         self.ball = Ball()
@@ -64,7 +70,7 @@ class Client:
                     self.scale = min(Client.MAX_SCALE, max(Client.MIN_SCALE, self.scale))
 
             # Receive the latest packet from grSim
-            wrapper_packet = self.connection.receive()
+            wrapper_packet = self.receiver.receive()
 
             if wrapper_packet is None:
                 continue
@@ -85,6 +91,7 @@ class Client:
                 if delta_frames > 0:
                     # If more than 1 frame has passed, the packet has changed, so let's update and render the simulation
                     self.update(frame_time - self.last_frame_time)
+                    self.send_commands()
                     self.render()
 
                     self.last_frame_number = frame_number
@@ -108,7 +115,21 @@ class Client:
         Update outgoing packet information for the controlled team
         :param delta_time: The amount of time passed since the last  update
         """
-        self.team_bots.update(delta_time)
+        self.yellow_bots.update_stats(delta_time)
+        self.blue_bots.update_stats(delta_time)
+        self.ball.update_stats(delta_time)
+        self.team_bots.update_commands(delta_time)
+
+    def send_commands(self):
+        """
+        Sends all robot outputs in a packet to grSim
+        """
+        sim_packet = grSim_Packet()
+        sim_packet.commands.isteamyellow = self.team == Team.YELLOW
+        sim_packet.commands.timestamp = 0
+
+        self.team_bots.write_output(sim_packet.commands.robot_commands)
+        self.sender.send(sim_packet)
 
     def render(self):
         """
@@ -130,7 +151,7 @@ class Client:
         :param y: The y-coordinate
         :return: A tuple containing the screen coordinates
         """
-        return int(x * self.scale + self.width * 0.5), int(-y * self.scale + self.height * 0.5)
+        return int(round(x * self.scale + self.width * 0.5)), int(round(-y * self.scale + self.height * 0.5))
 
     def screen_scalar(self, value: float) -> int:
         """
@@ -138,4 +159,4 @@ class Client:
         :param value: The value to scale
         :return: The scaled value
         """
-        return int(value * self.scale)
+        return int(round(value * self.scale))

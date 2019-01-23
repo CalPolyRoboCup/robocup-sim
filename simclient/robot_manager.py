@@ -3,6 +3,8 @@ from proto.messages_robocup_ssl_detection_pb2 import SSL_DetectionRobot
 from simclient.robot import Robot
 from simclient.team import Team
 
+from .test.test_command import TestCommand
+
 
 class RobotManager:
     """
@@ -29,18 +31,37 @@ class RobotManager:
             if self.robots[robot.robot_id] is None:
                 # if a robot hasn't been updated yet, create a new robot instance
                 self.robots[robot.robot_id] = Robot(self.team, robot)
+                self.robots[robot.robot_id].run_command(TestCommand())
 
             # Decode the current SSL_DetectionRobot packet
             self.robots[robot.robot_id].decode(robot)
 
-    def update(self, delta_time: float):
+    def update_stats(self, delta_time: float):
         """
         Update all team robots
         :param delta_time: The time passed since the last update
         """
         for robot in self.robots:
             if robot is not None:
-                robot.update(delta_time)
+                robot.update_stats(delta_time)
+
+    def update_commands(self, delta_time: float):
+        """
+        Update each command on each robot
+        :param delta_time: The time passed since the last update
+        """
+        for robot in self.robots:
+            if robot is not None:
+                robot.update_command(delta_time)
+
+    def write_output(self, robot_commands):
+        """
+        Write each robot's outputs to the given command packet
+        :param robot_commands: The command packet to be updated
+        """
+        for robot in self.robots:
+            if robot is not None:
+                robot.write_output(robot_commands.add())
 
     def render(self, client):
         """

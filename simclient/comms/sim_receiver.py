@@ -12,7 +12,7 @@ from proto.messages_robocup_ssl_wrapper_pb2 import SSL_WrapperPacket
 import logging
 
 
-class SimConnection:
+class SimReceiver:
     """
     Used to receive vision packets from grSim
     """
@@ -43,7 +43,7 @@ class SimConnection:
             self.socket.setsockopt(IPPROTO_IP, IP_ADD_MEMBERSHIP,
                                    pack('=4sl', inet_aton(self.address), INADDR_ANY))
 
-        self.socket.settimeout(SimConnection.TIMEOUT)
+        self.socket.settimeout(SimReceiver.TIMEOUT)
 
     def receive(self) -> SSL_WrapperPacket:
         """
@@ -55,7 +55,7 @@ class SimConnection:
             raise RuntimeError('Cannot receive packets before a connection is opened')
 
         try:
-            data = self.socket.recv(SimConnection.PACKET_SIZE)
+            data = self.socket.recv(SimReceiver.PACKET_SIZE)
         except timeout:
             self.logger.log(logging.ERROR, 'Socket timed out when receiving a packet')
             return None

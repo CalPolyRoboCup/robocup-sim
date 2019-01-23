@@ -29,7 +29,6 @@ class Ball:
         Decodes the given SSL_DetectionBall packet
         :param det_ball: The SSL_DetectionBall packet to decode
         """
-
         # Update the position information
         self.position.set(det_ball.x, det_ball.y)
 
@@ -37,20 +36,22 @@ class Ball:
         if self.last_position is None:
             self.last_position = self.position
 
-    def update(self, delta_time: float):
+    def update_stats(self, delta_time: float):
         """
         Updates the velocity stats for the ball
         :param delta_time: The time passed since the last update
         """
-        if self.position != self.last_position:
-            # If the ball has moved since the last update, update its speed information
-            self.speed = self.position.subtract(self.last_position).length() / delta_time * 0.001
+        if self.last_position is None or self.position == self.last_position:
+            return
 
-            if self.speed > 0:
-                self.direction = math.atan2(-(self.position.y - self.last_position.y),
-                                            self.position.x - self.last_position.x)
+        # If the ball has moved since the last update, update its speed information
+        self.speed = self.position.subtract(self.last_position).length() / delta_time * 0.001
 
-            self.last_position.copy_from(self.position)
+        if self.speed > 0:
+            self.direction = math.atan2(-(self.position.y - self.last_position.y),
+                                        self.position.x - self.last_position.x)
+
+        self.last_position.copy_from(self.position)
 
     def render(self, client):
         """
