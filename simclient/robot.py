@@ -243,29 +243,29 @@ class Robot:
         self._target_angular_velocity = self._orientation_pid.calculate(delta_time, MathHelper.adjust_angle_value(
             self._orientation_pid.set_point, self.transform.orientation))
 
-    def render(self, client):
+    def render(self, master):
         """
-        Render the robot to the given client
-        :param client: The client which to render the robot
+        Render the robot to the given master's window
+        :param master: The master which to render the robot
         """
         # Draw the filled circle of the robot
-        pygame.draw.circle(client.screen, self.color,
-                           client.screen_point(self.transform.position.x, self.transform.position.y),
-                           client.screen_scalar(Robot.RADIUS))
+        pygame.draw.circle(master.screen, self.color,
+                           master.screen_point(self.transform.position.x, self.transform.position.y),
+                           master.screen_scalar(Robot.RADIUS))
 
         # Draw the outline of the robot
-        pygame.draw.circle(client.screen, (0, 0, 0),
-                           client.screen_point(self.transform.position.x, self.transform.position.y),
-                           client.screen_scalar(Robot.RADIUS), Robot.OUTLINE_SIZE)
+        pygame.draw.circle(master.screen, (0, 0, 0),
+                           master.screen_point(self.transform.position.x, self.transform.position.y),
+                           master.screen_scalar(Robot.RADIUS), Robot.OUTLINE_SIZE)
 
         # Draw the kicker of the robot
-        pygame.draw.line(client.screen, Robot.KICKER_COLOR,
-                         client.screen_point(self.transform.position.x + (Robot.RADIUS + Robot.KICKER_OFFSET) *
+        pygame.draw.line(master.screen, Robot.KICKER_COLOR,
+                         master.screen_point(self.transform.position.x + (Robot.RADIUS + Robot.KICKER_OFFSET) *
                                              math.cos(self.transform.orientation + Robot.KICKER_WIDTH),
                                              self.transform.position.y + Robot.RADIUS *
                                              math.sin(self.transform.orientation + Robot.KICKER_WIDTH)),
-                         client.screen_point(self.transform.position.x + (Robot.RADIUS + Robot.KICKER_OFFSET) *
+                         master.screen_point(self.transform.position.x + (Robot.RADIUS + Robot.KICKER_OFFSET) *
                                              math.cos(self.transform.orientation - Robot.KICKER_WIDTH),
                                              self.transform.position.y + Robot.RADIUS *
                                              math.sin(self.transform.orientation - Robot.KICKER_WIDTH)),
-                         client.screen_scalar(Robot.KICKER_THICKNESS))
+                         master.screen_scalar(Robot.KICKER_THICKNESS))

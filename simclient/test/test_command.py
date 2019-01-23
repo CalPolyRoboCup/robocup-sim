@@ -3,24 +3,23 @@ from ..command import Command
 
 class TestCommand(Command):
     def assigned(self):
-        pass
-        # print("Assigned!")
+        print("Assigned!")
 
     def start(self):
         pass
-        # print("Start!")
+        print("Start!")
 
     def update(self, delta_time: float):
         pass
-        # print("Update!")
+        print("Update!")
 
     def is_finished(self) -> bool:
         return False
 
     def interrupted(self):
         pass
-        # print("Interrupted!")
+        print("Interrupted!")
 
     def end(self):
         pass
-        # print("End!")
+        print("End!")

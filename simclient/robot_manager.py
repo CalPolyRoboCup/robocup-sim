@@ -3,8 +3,6 @@ from proto.messages_robocup_ssl_detection_pb2 import SSL_DetectionRobot
 from simclient.robot import Robot
 from simclient.team import Team
 
-from .test.test_command import TestCommand
-
 
 class RobotManager:
     """
@@ -31,7 +29,7 @@ class RobotManager:
             if self.robots[robot.robot_id] is None:
                 # if a robot hasn't been updated yet, create a new robot instance
                 self.robots[robot.robot_id] = Robot(self.team, robot)
-                self.robots[robot.robot_id].run_command(TestCommand())
+                self.init_robot(self.robots[robot.robot_id])
 
             # Decode the current SSL_DetectionRobot packet
             self.robots[robot.robot_id].decode(robot)
@@ -50,6 +48,8 @@ class RobotManager:
         Update each command on each robot
         :param delta_time: The time passed since the last update
         """
+        self.update(delta_time)
+
         for robot in self.robots:
             if robot is not None:
                 robot.update_command(delta_time)
@@ -63,11 +63,27 @@ class RobotManager:
             if robot is not None:
                 robot.write_output(robot_commands.add())
 
-    def render(self, client):
+    def render(self, master):
         """
-        Renders all team robots to the client
-        :param client: The client which to render the robots
+        Renders all team robots to the master's window
+        :param master: The master which to render the robots
         """
         for robot in self.robots:
             if robot is not None:
-                robot.render(client)
+                robot.render(master)
+
+    def init_robot(self, robot: Robot):
+        """
+        Called when a robot created
+        :param robot: The robot that was just created
+        """
+        pass
+
+    def update(self, delta_time: float):
+        """
+        Called just before each robot updates their individual commands
+        :param delta_time: The time passed since the last update
+        """
+        pass
+
+
