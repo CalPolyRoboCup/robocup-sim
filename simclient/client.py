@@ -4,31 +4,38 @@ from simclient.master import Master
 
 from proto.grSim_Packet_pb2 import grSim_Packet
 
-from .robot_manager import RobotManager
+from simclient.team import Team
+from simclient.robot import Robot
+from simclient.communication.sim_receiver import SimReceiver
+from simclient.communication.sim_sender import SimSender
 
-from .team import Team
-
-from .communication.sim_receiver import SimReceiver
-from .communication.sim_sender import SimSender
+from simclient.commands.aim_at_robot import AimAtRobot
 
 
 class Client(Master):
     """
     The class that manages graphics, input, running AI logic, and communicating with grSim
     """
-    def __init__(self, title: str, width: int, height: int, robot_manager: RobotManager):
+    def __init__(self, title: str, width: int, height: int, team: Team):
         """
         Initializes a new Client instance
         :param title: The title of the window
         :param width: The width of the window
         :param height: The height of the window
-        :param robot_manager: The robot manager to control our team
+        :param team: The team the client is controlling
         """
-        super().__init__(title, width, height, robot_manager)
+        super().__init__(title, width, height, team)
         self.receiver = SimReceiver()
         self.receiver.open()
         self.sender = SimSender()
         self.sender.connect()
+
+    def update_ai(self, delta_time: float):
+        """
+        Updates AI logic
+        :param delta_time: The time passed since the last update
+        """
+        pass
 
     def receive_packet(self) -> SSL_WrapperPacket:
         """
@@ -47,3 +54,19 @@ class Client(Master):
 
         self.team_bots.write_output(sim_packet.commands.robot_commands)
         self.sender.send(sim_packet)
+
+    def init_team_robot(self, robot: Robot):
+        """
+        Initializes a new team robot when initially detected
+        :param robot: The new robot
+        """
+        if robot.id == 0:
+            robot.run_command(AimAtRobot(self, 1))
+        pass
+
+    def init_other_robot(self, robot: Robot):
+        """
+        Initializes a new opponent robot when initially detected
+        :param robot: The new robot
+        """
+        pass

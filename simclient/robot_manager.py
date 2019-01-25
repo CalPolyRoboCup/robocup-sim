@@ -8,18 +8,22 @@ class RobotManager:
     """
     Manages and updates a team of robots
     """
+
+    DEFAULT_TEAM_SIZE = 12
+
     def __init__(self, team: Team):
         """
         Initializes a new RobotManager instance
         :param team: The team that the RobotManager is managing
         """
         self.team = team
-        self.robots = []
+        self.robots = RobotManager.DEFAULT_TEAM_SIZE * [None]
 
-    def decode(self, det_robots: [SSL_DetectionRobot]):
+    def decode(self, det_robots: [SSL_DetectionRobot], init_robot):
         """
         Decode a list of SSL_DetectionRobot packets and update the managed robots accordingly
         :param det_robots: The list of SSL_DetectionRobot packets to decode
+        :param init_robot: Called if a new robot is detected
         """
         for robot in det_robots:
             for i in range(len(self.robots), robot.robot_id + 1):
@@ -28,8 +32,8 @@ class RobotManager:
 
             if self.robots[robot.robot_id] is None:
                 # if a robot hasn't been updated yet, create a new robot instance
-                self.robots[robot.robot_id] = Robot(self.team, robot)
-                self.init_robot(self.robots[robot.robot_id])
+                new_robot = self.robots[robot.robot_id] = Robot(self.team, robot)
+                init_robot(new_robot)
 
             # Decode the current SSL_DetectionRobot packet
             self.robots[robot.robot_id].decode(robot)
@@ -48,8 +52,6 @@ class RobotManager:
         Update each command on each robot
         :param delta_time: The time passed since the last update
         """
-        self.update(delta_time)
-
         for robot in self.robots:
             if robot is not None:
                 robot.update_command(delta_time)
@@ -71,19 +73,3 @@ class RobotManager:
         for robot in self.robots:
             if robot is not None:
                 robot.render(master)
-
-    def init_robot(self, robot: Robot):
-        """
-        Called when a robot created
-        :param robot: The robot that was just created
-        """
-        pass
-
-    def update(self, delta_time: float):
-        """
-        Called just before each robot updates their individual commands
-        :param delta_time: The time passed since the last update
-        """
-        pass
-
-

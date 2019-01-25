@@ -200,7 +200,7 @@ class Robot:
         """
         if self.transform != self.last_transform:
             # If the robot has moved since the last frame, update velocity information
-            self.speed = self.transform.position.subtract(self.last_transform.position).length() / delta_time * 0.001
+            self.speed = (self.transform.position - self.last_transform.position).length() / delta_time * 0.001
 
             if self.speed > 0:
                 self.direction = math.atan2(self.transform.position.y - self.last_transform.position.y,

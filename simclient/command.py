@@ -1,15 +1,22 @@
 from abc import *
 
+from simclient.master import Master
+from simclient.robot import Robot
+
 
 class Command(ABC):
     """
     Used to define a core skill or behavior of a robot
     """
-    def __init__(self):
+    def __init__(self, master: Master):
         """
         Initializes a new Command
         """
         self._robot = None
+        self.team_bots = master.team_bots
+        self.other_bots = master.other_bots
+        self.field = master.field
+        self.ball = master.ball
 
     def set_robot(self, robot) -> bool:
         """
@@ -25,7 +32,7 @@ class Command(ABC):
 
         return True
 
-    def get_robot(self):
+    def get_robot(self) -> Robot:
         """
         Returns the robot assigned with this command
         :return: The robot assigned with this command

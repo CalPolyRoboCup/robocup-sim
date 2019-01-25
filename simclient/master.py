@@ -8,6 +8,7 @@ from simclient.robot_manager import RobotManager
 from simclient.ball import Ball
 from simclient.field import Field
 from simclient.team import Team
+from simclient.robot import Robot
 
 from proto.messages_robocup_ssl_wrapper_pb2 import SSL_WrapperPacket
 
@@ -22,13 +23,13 @@ class Master(ABC):
     MIN_SCALE = 0.05
     SCALE_RATE = 1.05
 
-    def __init__(self, title: str, width: int, height: int, robot_manager: RobotManager):
+    def __init__(self, title: str, width: int, height: int, team: Team):
         """
         Initializes a new Master instance
         :param title: The title of the window
         :param width: The width of the window
         :param height: The height of the window
-        :param robot_manager: The robot manager to control our team
+        :param team: The team the client is controlling
         """
         self.width = width
         self.height = height
@@ -37,14 +38,15 @@ class Master(ABC):
         self.field = Field()
         self.last_frame_number = None
         self.last_frame_time = None
-        self.team_bots = robot_manager
+        self.yellow_bots = RobotManager(Team.YELLOW)
+        self.blue_bots = RobotManager(Team.BLUE)
 
-        if self.team_bots.team == Team.YELLOW:
-            self.yellow_bots = self.team_bots
-            self.blue_bots = RobotManager(Team.BLUE)
+        if team == Team.YELLOW:
+            self.team_bots = self.yellow_bots
+            self.other_bots = self.blue_bots
         else:
-            self.yellow_bots = RobotManager(Team.YELLOW)
-            self.blue_bots = robot_manager
+            self.team_bots = self.blue_bots
+            self.other_bots = self.yellow_bots
 
         # Initialize pygame and set the proper window properties
         pygame.init()
@@ -98,8 +100,8 @@ class Master(ABC):
                     self.last_frame_time = frame_time
 
             # Decode robot information form the packet
-            self.yellow_bots.decode(frame.robots_yellow)
-            self.blue_bots.decode(frame.robots_blue)
+            self.team_bots.decode(frame.robots_yellow, self.init_team_robot)
+            self.blue_bots.decode(frame.robots_blue, self.init_other_robot)
 
             # Find the first valid ball in the frame (this works great for grSim, might want to change for SSL_Vision)
             frame_ball = next((item for item in frame.balls if item is not None), None)
@@ -115,9 +117,15 @@ class Master(ABC):
         Update outgoing packet information for the controlled team
         :param delta_time: The amount of time passed since the last  update
         """
+        # Update stats the robots and ball
         self.yellow_bots.update_stats(delta_time)
         self.blue_bots.update_stats(delta_time)
         self.ball.update_stats(delta_time)
+
+        # Update AI
+        self.update_ai(delta_time)
+
+        # Update commands
         self.team_bots.update_commands(delta_time)
 
     def render(self):
@@ -149,6 +157,27 @@ class Master(ABC):
         :return: The scaled value
         """
         return int(round(value * self.scale))
+
+    @abstractmethod
+    def update_ai(self, delta_time: float):
+        """
+        Used to update AI logic
+        """
+        pass
+
+    @abstractmethod
+    def init_team_robot(self, robot: Robot):
+        """
+        Called when SSL_Vision detects a new team robot on the field
+        """
+        pass
+
+    @abstractmethod
+    def init_other_robot(self, robot: Robot):
+        """
+        Called when SSL_Vision detects a new opponent robot on the field
+        """
+        pass
 
     @abstractmethod
     def receive_packet(self) -> SSL_WrapperPacket:

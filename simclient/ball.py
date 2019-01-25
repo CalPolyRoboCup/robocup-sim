@@ -45,7 +45,7 @@ class Ball:
             return
 
         # If the ball has moved since the last update, update its speed information
-        self.speed = self.position.subtract(self.last_position).length() / delta_time * 0.001
+        self.speed = (self.position - self.last_position).length() / delta_time * 0.001
 
         if self.speed > 0:
             self.direction = math.atan2(-(self.position.y - self.last_position.y),
