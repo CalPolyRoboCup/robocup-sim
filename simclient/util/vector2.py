@@ -68,6 +68,14 @@ class Vector2:
         """
         return Vector2(self.x * scalar, self.y * scalar)
 
+    def __truediv__(self, scalar: float) -> 'Vector2':
+        """
+        Calculates and returns a scaled copy of this vector
+        :param scalar: The factor by which to scale this vector
+        :return: The scaled copy of this vector
+        """
+        return Vector2(self.x / scalar, self.y / scalar)
+
     def __len__(self):
         """
         Calculates the length of this Vector2

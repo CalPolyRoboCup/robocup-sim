@@ -87,6 +87,7 @@ class Robot:
         self.last_transform = RobotTransform()
         self.last_transform.decode(det_robot)
         self.transform = RobotTransform()
+        self.screen_pos = Vector2()
         self.speed = 0
         self.direction = 0
         self.angular_velocity = 0
@@ -248,15 +249,16 @@ class Robot:
         Render the robot to the given master's window
         :param master: The master which to render the robot
         """
+        # Calculate and update position on screen
+        screen_point = master.screen_point(self.transform.position.x, self.transform.position.y)
+        self.screen_pos.set(screen_point[0], screen_point[1])
+
         # Draw the filled circle of the robot
-        pygame.draw.circle(master.screen, self.color,
-                           master.screen_point(self.transform.position.x, self.transform.position.y),
-                           master.screen_scalar(Robot.RADIUS))
+        pygame.draw.circle(master.screen, self.color, screen_point, master.screen_scalar(Robot.RADIUS))
 
         # Draw the outline of the robot
-        pygame.draw.circle(master.screen, (0, 0, 0),
-                           master.screen_point(self.transform.position.x, self.transform.position.y),
-                           master.screen_scalar(Robot.RADIUS), Robot.OUTLINE_SIZE)
+        pygame.draw.circle(master.screen, (0, 0, 0), screen_point, master.screen_scalar(Robot.RADIUS),
+                           Robot.OUTLINE_SIZE)
 
         # Draw the kicker of the robot
         pygame.draw.line(master.screen, Robot.KICKER_COLOR,

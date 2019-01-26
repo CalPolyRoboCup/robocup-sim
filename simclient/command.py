@@ -12,11 +12,13 @@ class Command(ABC):
         """
         Initializes a new Command
         """
-        self._robot = None
         self.team_bots = master.team_bots
         self.other_bots = master.other_bots
         self.field = master.field
         self.ball = master.ball
+        self.master = master
+
+        self._robot = None
 
     def set_robot(self, robot) -> bool:
         """

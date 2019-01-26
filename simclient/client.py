@@ -10,6 +10,7 @@ from simclient.communication.sim_receiver import SimReceiver
 from simclient.communication.sim_sender import SimSender
 
 from simclient.commands.aim_at_robot import AimAtRobot
+from simclient.test.move_to_mouse import MoveToMouse
 
 
 class Client(Master):
@@ -62,7 +63,8 @@ class Client(Master):
         """
         if robot.id == 0:
             robot.run_command(AimAtRobot(self, 1))
-        pass
+        elif robot.id == 1:
+            robot.run_command(MoveToMouse(self))
 
     def init_other_robot(self, robot: Robot):
         """
