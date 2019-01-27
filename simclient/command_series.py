@@ -1,9 +1,11 @@
 import logging
 
+from enum import Enum
+
 from .command import Command, CommandStatus
 
 
-class FailResponse:
+class FailResponse(Enum):
     """
     Used for defining how a command series should respond to a child command's failure
     """
