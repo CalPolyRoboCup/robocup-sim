@@ -1,7 +1,17 @@
 from abc import *
+from enum import Enum
 
 from simclient.master import Master
 from simclient.robot import Robot
+
+
+class CommandStatus(Enum):
+    """
+    An enumeration used to indicate the status of a command
+    """
+    RUNNING = 0
+    COMPLETED = 1
+    FAILED = 2
 
 
 class Command(ABC):
@@ -41,6 +51,13 @@ class Command(ABC):
         """
         return self._robot
 
+    def is_finished(self) -> bool:
+        """
+        Returns true if the command has finished execution
+        :return: True if the command has finished execution, otherwise False
+        """
+        return self.get_status() != CommandStatus.RUNNING
+
     @abstractmethod
     def assigned(self):
         """
@@ -64,12 +81,12 @@ class Command(ABC):
         pass
 
     @abstractmethod
-    def is_finished(self) -> bool:
+    def get_status(self) -> CommandStatus:
         """
         Used to determine if this command has finished executing
         :return: True if the command has finished executing, otherwise False
         """
-        return False
+        return CommandStatus.RUNNING
 
     @abstractmethod
     def interrupted(self):

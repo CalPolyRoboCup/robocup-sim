@@ -1,4 +1,4 @@
-from ..command import Command
+from ..command import Command, CommandStatus
 from ..util.vector2 import Vector2
 from ..util.math_helper import MathHelper
 from ..master import Master
@@ -72,9 +72,8 @@ class AimAtRobot(Command):
         target_direction = -MathHelper.get_line_angle(robot_pos, current_target_pos)
         self.get_robot().set_target_direction(target_direction)
 
-    def is_finished(self) -> bool:
-        # TODO: This command will always run
-        return False
+    def get_status(self) -> CommandStatus:
+        return CommandStatus.RUNNING
 
     def interrupted(self):
         pass

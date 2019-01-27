@@ -1,4 +1,4 @@
-from ..command import Command
+from ..command import Command, CommandStatus
 
 
 class TestCommand(Command):
@@ -13,8 +13,8 @@ class TestCommand(Command):
         pass
         print("Update!")
 
-    def is_finished(self) -> bool:
-        return False
+    def get_status(self) -> CommandStatus:
+        return CommandStatus.RUNNING
 
     def interrupted(self):
         pass

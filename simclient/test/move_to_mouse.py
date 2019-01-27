@@ -1,6 +1,6 @@
 import pygame
 
-from ..command import Command
+from ..command import Command, CommandStatus
 from ..util.vector2 import Vector2
 from ..util.math_helper import MathHelper
 
@@ -28,8 +28,8 @@ class MoveToMouse(Command):
         # Move toward mouse if mouse is pressed
         robot.set_target_speed(1.0 if pygame.mouse.get_pressed()[0] else 0.0)
 
-    def is_finished(self) -> bool:
-        return False
+    def get_status(self) -> CommandStatus:
+        return CommandStatus.RUNNING
 
     def interrupted(self):
         pass
