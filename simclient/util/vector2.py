@@ -23,6 +23,13 @@ class Vector2:
         self.x = x
         self.y = y
 
+    def copy(self) -> 'Vector2':
+        """
+        Returns a copy of this Vector2
+        :return: A copy of this Vector2
+        """
+        return Vector2(self.x, self.y)
+
     def copy_from(self, other: 'Vector2'):
         """
         Copies the x and y coordinates from another Vector2 into this instance

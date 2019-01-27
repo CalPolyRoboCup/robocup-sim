@@ -28,6 +28,9 @@ class MoveToMouse(Command):
         # Move toward mouse if mouse is pressed
         robot.set_target_speed(1.0 if pygame.mouse.get_pressed()[0] else 0.0)
 
+        # Activate the kicker if the right mouse button is pressed
+        robot.set_kicker_speed(3.0 if pygame.mouse.get_pressed()[2] else 0.0)
+
     def get_status(self) -> CommandStatus:
         return CommandStatus.RUNNING
 

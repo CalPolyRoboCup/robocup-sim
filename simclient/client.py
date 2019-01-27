@@ -10,6 +10,7 @@ from simclient.communication.sim_receiver import SimReceiver
 from simclient.communication.sim_sender import SimSender
 
 from simclient.commands.aim_at_robot import AimAtRobot
+from simclient.commands.stay_put import StayPut
 from simclient.test.move_to_mouse import MoveToMouse
 
 
@@ -61,6 +62,8 @@ class Client(Master):
         Initializes a new team robot when initially detected
         :param robot: The new robot
         """
+        robot.set_default_command(StayPut(self))
+
         if robot.id == 0:
             robot.run_command(AimAtRobot(self, 1))
         elif robot.id == 1:
