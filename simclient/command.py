@@ -1,9 +1,6 @@
 from abc import *
 from enum import Enum
 
-from simclient.master import Master
-from simclient.robot import Robot
-
 
 class CommandStatus(Enum):
     """
@@ -18,7 +15,7 @@ class Command(ABC):
     """
     Used to define a core skill or behavior of a robot
     """
-    def __init__(self, master: Master):
+    def __init__(self, master):
         """
         Initializes a new Command
         """
@@ -44,7 +41,7 @@ class Command(ABC):
 
         return True
 
-    def get_robot(self) -> Robot:
+    def get_robot(self):
         """
         Returns the robot assigned with this command
         :return: The robot assigned with this command
@@ -96,8 +93,9 @@ class Command(ABC):
         pass
 
     @abstractmethod
-    def end(self):
+    def end(self, command_status: CommandStatus):
         """
         Called when this command quits execution
+        :param command_status: The status of the command when its execution was ended
         """
         pass

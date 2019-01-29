@@ -45,7 +45,7 @@ class SetKicker(Command):
         """
         pass
 
-    def end(self):
+    def end(self, command_status: CommandStatus):
         """
         Not implemented
         """

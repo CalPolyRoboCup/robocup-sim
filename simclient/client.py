@@ -9,9 +9,10 @@ from simclient.robot import Robot
 from simclient.communication.sim_receiver import SimReceiver
 from simclient.communication.sim_sender import SimSender
 
-from simclient.commands.aim_at_robot import AimAtRobot
-from simclient.commands.stay_put import StayPut
+from simclient.test.aim_at_robot import AimAtRobot
+from simclient.test.stay_put import StayPut
 from simclient.test.move_to_mouse import MoveToMouse
+from simclient.test.pass_to_robot import PassToRobot
 
 
 class Client(Master):
@@ -65,9 +66,11 @@ class Client(Master):
         robot.set_default_command(StayPut(self))
 
         if robot.id == 0:
-            robot.run_command(AimAtRobot(self, 1))
-        elif robot.id == 1:
-            robot.run_command(MoveToMouse(self))
+            robot.run_command(PassToRobot(self, 1))
+        # if robot.id == 0:
+        #     robot.run_command(AimAtRobot(self, 1))
+        # elif robot.id == 1:
+        #     robot.run_command(MoveToMouse(self))
 
     def init_other_robot(self, robot: Robot):
         """

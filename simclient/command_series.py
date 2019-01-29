@@ -2,6 +2,8 @@ import logging
 
 from enum import Enum
 
+from abc import abstractmethod
+
 from .command import Command, CommandStatus
 
 
@@ -45,7 +47,7 @@ class CommandSeries(Command):
         :return:
         """
         for command in self.commands:
-            if not command.set_robot(self.get_robot()):
+            if not command[0].set_robot(self.get_robot()):
                 self.logger.log(logging.WARNING, "Cannot add commands to a command series that have already been added"
                                                  "to another robot!")
 
@@ -72,7 +74,7 @@ class CommandSeries(Command):
 
         if command_status == CommandStatus.COMPLETED:
             # If the command has completed successfully, try to start the next command in the series
-            if not self._start_next():
+            if not self._start_next(command_status):
                 # If there are no more commands in the series, indicate that the command series has completed
                 self.status = CommandStatus.COMPLETED
                 return
@@ -80,13 +82,13 @@ class CommandSeries(Command):
             # If the command failed in some way, handle the failure according to the indicated failure response
             if self.fail_response == FailResponse.CONTINUE:
                 # If we are supposed to continue anyway, try to start the next command in the series
-                if not self._start_next():
+                if not self._start_next(command_status):
                     # If there are no more commands in the series, indicate that the command series has completed
                     self.status = CommandStatus.COMPLETED
                     return
             elif self.fail_response == FailResponse.RETRY:
                 # If we are supposed to retry the command, do so
-                self.command.end()
+                self.command.end(command_status)
                 self.command.start()
             elif self.fail_response == FailResponse.FAIL:
                 # If we are supposed to fail if this command fails, then indicate that the command series has failed
@@ -103,28 +105,31 @@ class CommandSeries(Command):
         """
         return self.status
 
+    @abstractmethod
     def interrupted(self):
         """
-        Not implemented
+        Called when this command is interrupted by another command
         """
         pass
 
-    def end(self):
+    @abstractmethod
+    def end(self, command_status: CommandStatus):
         """
-        Not implemented
+        Called when this command ends execution
+        :param command_status: The status of the command when its execution was ended
         """
         pass
 
-    def _start_next(self) -> bool:
+    def _start_next(self, command_status: CommandStatus) -> bool:
         """
         Attempts to start the next command in the series
         :return: True if the next command was started, False if there are no more commands in the series to start
         """
-        self.command.end()
+        self.command.end(command_status)
 
         if self.index < len(self.commands) - 1:
             self.index += 1
-            self.command = self.commands[self.index]
+            (self.command, self.fail_response) = self.commands[self.index]
             self.command.start()
             return True
         else:

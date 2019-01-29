@@ -7,10 +7,11 @@ import pygame
 from proto.messages_robocup_ssl_detection_pb2 import SSL_DetectionRobot
 from proto.grSim_Commands_pb2 import grSim_Robot_Command
 
+from simclient.command import CommandStatus
 from simclient.team import Team
-from simclient.util.vector2 import Vector2
-from simclient.util.pid import PID
-from simclient.util.math_helper import MathHelper
+from simclient.math.vector2 import Vector2
+from simclient.math.pid import PID
+from simclient.math.math_helper import MathHelper
 
 
 class RobotTransform:
@@ -221,7 +222,7 @@ class Robot:
             # the new one
             if self._command is not None:
                 self._command.interrupted()
-                self._command.end()
+                self._command.end(CommandStatus.FAILED)
 
             self._command = self._waiting_command
             self._waiting_command = None
@@ -229,11 +230,13 @@ class Robot:
 
         if self._command is not None:
             # Update the current command if valid
-            if self._command.is_finished():
-                self._command.end()
-                self._command = None
-            else:
+            status = self._command.get_status()
+
+            if status == CommandStatus.RUNNING:
                 self._command.update(delta_time)
+            else:
+                self._command.end(status)
+                self._command = None
 
         if self._command is None and self._waiting_command is None and self._default_command is not None:
             # If there is not command running and no commands are waiting, run the default command

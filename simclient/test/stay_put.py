@@ -1,5 +1,5 @@
 from simclient.command import Command, CommandStatus
-from simclient.util.math_helper import MathHelper
+from simclient.math.math_helper import MathHelper
 
 
 class StayPut(Command):
@@ -63,7 +63,7 @@ class StayPut(Command):
         """
         pass
 
-    def end(self):
+    def end(self, command_status: CommandStatus):
         """
         Not implemented
         """

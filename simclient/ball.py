@@ -2,7 +2,7 @@ import math
 
 import pygame
 
-from simclient.util.vector2 import Vector2
+from simclient.math.vector2 import Vector2
 
 from proto.messages_robocup_ssl_detection_pb2 import SSL_DetectionBall
 
@@ -34,7 +34,7 @@ class Ball:
 
         # Update the last position information if it hasn't been set yet
         if self.last_position is None:
-            self.last_position = self.position
+            self.last_position = self.position.copy()
 
     def update_stats(self, delta_time: float):
         """
