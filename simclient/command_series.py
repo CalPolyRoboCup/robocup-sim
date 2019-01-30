@@ -106,13 +106,6 @@ class CommandSeries(Command):
         return self.status
 
     @abstractmethod
-    def interrupted(self):
-        """
-        Called when this command is interrupted by another command
-        """
-        pass
-
-    @abstractmethod
     def end(self, command_status: CommandStatus):
         """
         Called when this command ends execution

@@ -86,12 +86,6 @@ class AimAtRobot(Command):
         # Otherwise, we're still running
         return CommandStatus.RUNNING
 
-    def interrupted(self):
-        """
-        Not implemented
-        """
-        pass
-
     def end(self, command_status: CommandStatus):
         """
         Sets the target speed to zero when the command is finished

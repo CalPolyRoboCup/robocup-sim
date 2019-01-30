@@ -41,12 +41,6 @@ class Delay(Command):
         """
         return CommandStatus.COMPLETED if self.seconds_passed >= self.delay_time else CommandStatus.RUNNING
 
-    def interrupted(self):
-        """
-        Not implemented
-        """
-        pass
-
     def end(self, command_status: CommandStatus):
         """
         Not implemented

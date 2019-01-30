@@ -27,12 +27,6 @@ class PassToRobot(CommandSeries):
         self.add_command(Delay(master, 0.05))
         self.add_command(SetKicker(master, 0.0))
 
-    def interrupted(self):
-        """
-        Not implemented
-        """
-        pass
-
     def end(self, command_status: CommandStatus):
         """
         Runs the catch ball command on the receiving robot if this command completed successfully

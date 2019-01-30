@@ -9,6 +9,7 @@ class CommandStatus(Enum):
     RUNNING = 0
     COMPLETED = 1
     FAILED = 2
+    INTERRUPTED = 3
 
 
 class Command(ABC):
@@ -84,13 +85,6 @@ class Command(ABC):
         :return: True if the command has finished executing, otherwise False
         """
         return CommandStatus.RUNNING
-
-    @abstractmethod
-    def interrupted(self):
-        """
-        Called when this command is interrupted by another command
-        """
-        pass
 
     @abstractmethod
     def end(self, command_status: CommandStatus):

@@ -39,12 +39,6 @@ class SetKicker(Command):
         """
         return CommandStatus.COMPLETED
 
-    def interrupted(self):
-        """
-        Not implemented
-        """
-        pass
-
     def end(self, command_status: CommandStatus):
         """
         Not implemented

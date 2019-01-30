@@ -84,8 +84,5 @@ class LineUpPass(Command):
         # If none of the above conditions were met, we're still running
         return CommandStatus.RUNNING
 
-    def interrupted(self):
-        pass
-
     def end(self, command_status: CommandStatus):
         pass

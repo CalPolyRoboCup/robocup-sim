@@ -80,12 +80,6 @@ class CatchBall(Command):
         # If none of the above cases occurred, we're still running
         return CommandStatus.RUNNING
 
-    def interrupted(self):
-        """
-        Not implemented
-        """
-        pass
-
     def end(self, command_status: CommandStatus):
         """
         When this command completes, make the robot pass to the next robot

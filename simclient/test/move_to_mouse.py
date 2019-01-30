@@ -50,12 +50,6 @@ class MoveToMouse(Command):
         """
         return CommandStatus.RUNNING
 
-    def interrupted(self):
-        """
-        Not implemented
-        """
-        pass
-
     def end(self, command_status: CommandStatus):
         """
         Not implemented

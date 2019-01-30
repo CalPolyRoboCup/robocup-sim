@@ -221,8 +221,7 @@ class Robot:
             # If a new command is waiting to be executed, interrupt any current commands and start execution of
             # the new one
             if self._command is not None:
-                self._command.interrupted()
-                self._command.end(CommandStatus.FAILED)
+                self._command.end(CommandStatus.INTERRUPTED)
 
             self._command = self._waiting_command
             self._waiting_command = None
