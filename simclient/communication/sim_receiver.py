@@ -25,6 +25,8 @@ class SimReceiver:
         :param address: The grSim vision address
         :param port: The grSim vision port
         """
+        logging.basicConfig()
+
         self.address = address
         self.port = port
         self.logger = logging.getLogger(__name__)
