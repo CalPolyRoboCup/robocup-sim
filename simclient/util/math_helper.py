@@ -8,7 +8,7 @@ class MathHelper:
     Contains helper for complex mathematical procedures
     """
     @staticmethod
-    def adjust_angle_value(base_angle: float, other_angle: float) -> float:
+    def adjust_angle_value(base_angle, other_angle):
         """
         Adjusts an angle so that two angles are within 2 * pi distance of each other
         :param base_angle: The angle to remain constant
@@ -24,7 +24,7 @@ class MathHelper:
         return other_angle
 
     @staticmethod
-    def get_line_angle(point_a: Vector2, point_b: Vector2) -> float:
+    def get_line_angle(point_a, point_b):
         """
         Returns the angle in radians of the line drawn from point A to point B
         :param point_a: The first point in the line
@@ -34,7 +34,7 @@ class MathHelper:
         return math.atan2(point_b.y - point_a.y, point_b.x - point_a.x)
 
     @staticmethod
-    def get_closest_point(line_start: Vector2, line_end: Vector2, point: Vector2):
+    def get_closest_point(line_start, line_end, point):
         """
         Returns the point along the given line closest to the point provided
         :param line_start: The start of the line

@@ -26,7 +26,7 @@ class SimSender:
         self.socket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         self.socket.connect((self.address, self.port))
 
-    def send(self, packet: grSim_Packet):
+    def send(self, packet):
         """
         Sends the given packet to grSim
         :param packet: The grSim_Packet to send to grSim

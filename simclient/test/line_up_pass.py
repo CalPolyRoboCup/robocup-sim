@@ -1,7 +1,7 @@
 import math
 
 from simclient.command import Command, CommandStatus
-from simclient.math.math_helper import MathHelper
+from simclient.util.math_helper import MathHelper
 
 
 class LineUpPass(Command):
@@ -13,13 +13,13 @@ class LineUpPass(Command):
     MAXIMUM_DISTANCE = 110
     MAXIMUM_ANGLE = math.pi * 0.25
 
-    def __init__(self, master, target_robot: int):
+    def __init__(self, master, target_robot):
         """
         Initializes a new LineUpPass instance
         :param master: The Master instance
         :param target_robot: The target robot to pass to
         """
-        super().__init__(master)
+        super(LineUpPass, self).__init__(master)
         self.target_robot_id = target_robot
         self.target_robot = None
         self.target_orientation = 0.0
@@ -38,7 +38,7 @@ class LineUpPass(Command):
         self.target_orientation = 0.0
         self.target_direction = 0.0
 
-    def update(self, delta_time: float):
+    def update(self, delta_time):
         """
         Updates the logic for lining up the pass
         :param delta_time: The time passed since the last update
@@ -68,7 +68,7 @@ class LineUpPass(Command):
         self.target_direction = -MathHelper.get_line_angle(robot_pos, ball_pos)
         robot.set_target_direction(self.target_direction)
 
-    def get_status(self) -> CommandStatus:
+    def get_status(self):
         """
         Returns the current status of the command
         :return: The current status of the command
@@ -84,5 +84,8 @@ class LineUpPass(Command):
         # If none of the above conditions were met, we're still running
         return CommandStatus.RUNNING
 
-    def end(self, command_status: CommandStatus):
+    def end(self, command_status):
         pass
+
+
+Command.register(LineUpPass)

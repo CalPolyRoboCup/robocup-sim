@@ -1,8 +1,8 @@
 import pygame
 
 from ..command import Command, CommandStatus
-from ..math.vector2 import Vector2
-from ..math.math_helper import MathHelper
+from ..util.vector2 import Vector2
+from ..util.math_helper import MathHelper
 
 
 class MoveToMouse(Command):
@@ -21,7 +21,7 @@ class MoveToMouse(Command):
         """
         pass
 
-    def update(self, delta_time: float):
+    def update(self, delta_time):
         """
         Updates the robot's motor outputs to move toward the mouse
         :param delta_time: The time since the last update
@@ -44,14 +44,17 @@ class MoveToMouse(Command):
         # Activate the kicker if the right mouse button is pressed
         robot.set_kicker_speed(3.0 if pygame.mouse.get_pressed()[2] else 0.0)
 
-    def get_status(self) -> CommandStatus:
+    def get_status(self):
         """
         Return CommandStatus.RUNNING, since this command never terminates
         """
         return CommandStatus.RUNNING
 
-    def end(self, command_status: CommandStatus):
+    def end(self, command_status):
         """
         Not implemented
         """
         pass
+
+
+Command.register(MoveToMouse)

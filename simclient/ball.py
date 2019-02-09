@@ -2,7 +2,7 @@ import math
 
 import pygame
 
-from simclient.math.vector2 import Vector2
+from simclient.util.vector2 import Vector2
 
 from proto.messages_robocup_ssl_detection_pb2 import SSL_DetectionBall
 
@@ -24,7 +24,7 @@ class Ball:
         self.speed = 0
         self.direction = 0
 
-    def decode(self, det_ball: SSL_DetectionBall):
+    def decode(self, det_ball):
         """
         Decodes the given SSL_DetectionBall packet
         :param det_ball: The SSL_DetectionBall packet to decode
@@ -36,7 +36,7 @@ class Ball:
         if self.last_position is None:
             self.last_position = self.position.copy()
 
-    def update_stats(self, delta_time: float):
+    def update_stats(self, delta_time):
         """
         Updates the velocity stats for the ball
         :param delta_time: The time passed since the last update

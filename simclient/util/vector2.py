@@ -5,7 +5,7 @@ class Vector2:
     """
     Represents a vector in 2D coordinates
     """
-    def __init__(self, x: float = 0.0, y: float = 0.0):
+    def __init__(self, x=0.0, y=0.0):
         """
         Initializes this instance from the given x and y coordinates
         :param x: The x-coordinate
@@ -14,7 +14,7 @@ class Vector2:
         self.x = x
         self.y = y
 
-    def set(self, x: float, y: float):
+    def set(self, x, y):
         """
         Sets the x and y coordinates of this instance from the given x and y coordinates
         :param x: The x-coordinate
@@ -23,14 +23,14 @@ class Vector2:
         self.x = x
         self.y = y
 
-    def copy(self) -> 'Vector2':
+    def copy(self):
         """
         Returns a copy of this Vector2
         :return: A copy of this Vector2
         """
         return Vector2(self.x, self.y)
 
-    def copy_from(self, other: 'Vector2'):
+    def copy_from(self, other):
         """
         Copies the x and y coordinates from another Vector2 into this instance
         :param other: The other Vector2
@@ -38,14 +38,14 @@ class Vector2:
         self.x = other.x
         self.y = other.y
 
-    def length(self) -> float:
+    def length(self):
         """
         Calculates the length of this Vector2
         :return: The length of this Vector2
         """
         return math.sqrt(self.x * self.x + self.y * self.y)
 
-    def normalized(self) -> 'Vector2':
+    def normalized(self):
         """
         Calculates and returns a normalized copy of this vector
         :return: A normalized copy of this vector
@@ -53,21 +53,21 @@ class Vector2:
         length = self.length()
         return Vector2(self.x / length, self.y / length)
 
-    def __add__(self, other: 'Vector2') -> 'Vector2':
+    def __add__(self, other):
         """
         Adds another Vector2 to this one
         :param other: The other Vector2
         """
         return Vector2(self.x + other.x, self.y + other.y)
 
-    def __sub__(self, other: 'Vector2') -> 'Vector2':
+    def __sub__(self, other):
         """
         Subtracts another Vector2 from this one
         :param other: The other Vector2
         """
         return Vector2(self.x - other.x, self.y - other.y)
 
-    def __mul__(self, scalar: float) -> 'Vector2':
+    def __mul__(self, scalar):
         """
         Calculates and returns a scaled copy of this vector
         :param scalar: The factor by which to scale this vector
@@ -75,7 +75,7 @@ class Vector2:
         """
         return Vector2(self.x * scalar, self.y * scalar)
 
-    def __truediv__(self, scalar: float) -> 'Vector2':
+    def __truediv__(self, scalar):
         """
         Calculates and returns a scaled copy of this vector
         :param scalar: The factor by which to scale this vector

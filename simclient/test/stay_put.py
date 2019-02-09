@@ -1,5 +1,5 @@
 from simclient.command import Command, CommandStatus
-from simclient.math.math_helper import MathHelper
+from simclient.util.math_helper import MathHelper
 
 
 class StayPut(Command):
@@ -13,7 +13,7 @@ class StayPut(Command):
         Initializes a new StayPut instance
         :param master: The Master instance
         """
-        super().__init__(master)
+        super(StayPut, self).__init__(master)
         self.start_position = None
 
     def assigned(self):
@@ -29,7 +29,7 @@ class StayPut(Command):
         if self.start_position is None:
             self.start_position = self.get_robot().transform.position.copy()
 
-    def update(self, delta_time: float):
+    def update(self, delta_time):
         """
         Updates this command
         :param delta_time: The time since the last update
@@ -50,15 +50,18 @@ class StayPut(Command):
         target_orientation = MathHelper.get_line_angle(robot_pos, ball_pos)
         robot.set_target_orientation(target_orientation)
 
-    def get_status(self) -> CommandStatus:
+    def get_status(self):
         """
         This command runs indefinitely
         :return: The status of the command (will always be RUNNING)
         """
         return CommandStatus.RUNNING
 
-    def end(self, command_status: CommandStatus):
+    def end(self, command_status):
         """
         Not implemented
         """
         pass
+
+
+Command.register(StayPut)

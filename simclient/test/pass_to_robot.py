@@ -17,7 +17,7 @@ class PassToRobot(CommandSeries):
         :param master: The master instance
         :param target_robot_id: The ID of the robot to pass to
         """
-        super().__init__(master)
+        super(PassToRobot, self).__init__(master)
 
         self.target_robot_id = target_robot_id
 
@@ -27,7 +27,7 @@ class PassToRobot(CommandSeries):
         self.add_command(Delay(master, 0.05))
         self.add_command(SetKicker(master, 0.0))
 
-    def end(self, command_status: CommandStatus):
+    def end(self, command_status):
         """
         Runs the catch ball command on the receiving robot if this command completed successfully
         :param command_status: The status of the command when its execution was ended
@@ -41,3 +41,6 @@ class PassToRobot(CommandSeries):
         from simclient.test.catch_ball import CatchBall
         target_robot.run_command(CatchBall(self.master))
         del CatchBall
+
+
+CommandSeries.register(PassToRobot)

@@ -11,7 +11,7 @@ class RobotManager:
 
     DEFAULT_TEAM_SIZE = 12
 
-    def __init__(self, team: Team):
+    def __init__(self, team):
         """
         Initializes a new RobotManager instance
         :param team: The team that the RobotManager is managing
@@ -19,7 +19,7 @@ class RobotManager:
         self.team = team
         self.robots = RobotManager.DEFAULT_TEAM_SIZE * [None]
 
-    def decode(self, det_robots: [SSL_DetectionRobot], init_robot):
+    def decode(self, det_robots, init_robot):
         """
         Decode a list of SSL_DetectionRobot packets and update the managed robots accordingly
         :param det_robots: The list of SSL_DetectionRobot packets to decode
@@ -38,7 +38,7 @@ class RobotManager:
             # Decode the current SSL_DetectionRobot packet
             self.robots[robot.robot_id].decode(robot)
 
-    def update_stats(self, delta_time: float):
+    def update_stats(self, delta_time):
         """
         Update all team robots
         :param delta_time: The time passed since the last update
@@ -47,7 +47,7 @@ class RobotManager:
             if robot is not None:
                 robot.update_stats(delta_time)
 
-    def update_commands(self, delta_time: float):
+    def update_commands(self, delta_time):
         """
         Update each command on each robot
         :param delta_time: The time passed since the last update

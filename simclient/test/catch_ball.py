@@ -2,8 +2,8 @@ import math
 
 from simclient.command import Command, CommandStatus
 
-from simclient.math.vector2 import Vector2
-from simclient.math.math_helper import MathHelper
+from simclient.util.vector2 import Vector2
+from simclient.util.math_helper import MathHelper
 
 
 class CatchBall(Command):
@@ -19,7 +19,7 @@ class CatchBall(Command):
         Initializes a new CatchBall instance
         :param master: The master instance
         """
-        super().__init__(master)
+        super(CatchBall, self).__init__(master)
         self.ball_direction_vector = Vector2()
 
     def assigned(self):
@@ -34,7 +34,7 @@ class CatchBall(Command):
         """
         pass
 
-    def update(self, delta_time: float):
+    def update(self, delta_time):
         """
         Updates the catch ball logic
         :param delta_time: The time passed since the last update
@@ -61,7 +61,7 @@ class CatchBall(Command):
         robot.set_target_direction(target_direction)
         robot.set_target_speed(min((robot_pos - target_pos).length() * CatchBall.VELOCITY_THRESHOLD, 1.0))
 
-    def get_status(self) -> CommandStatus:
+    def get_status(self):
         """
         Returns the current status of the command
         :return: The current status of the command
@@ -80,7 +80,7 @@ class CatchBall(Command):
         # If none of the above cases occurred, we're still running
         return CommandStatus.RUNNING
 
-    def end(self, command_status: CommandStatus):
+    def end(self, command_status):
         """
         When this command completes, make the robot pass to the next robot
         :param command_status: The status that made this command terminate
@@ -100,3 +100,6 @@ class CatchBall(Command):
         from .pass_to_robot import PassToRobot
         self.get_robot().run_command(PassToRobot(self.master, next_robot.id))
         del PassToRobot
+
+
+Command.register(CatchBall)

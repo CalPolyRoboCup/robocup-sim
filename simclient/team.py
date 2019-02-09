@@ -1,7 +1,4 @@
-from enum import Enum
-
-
-class Team(Enum):
+class Team:
     """
     An enumeration used to represent a team (yellow or blue)
     """

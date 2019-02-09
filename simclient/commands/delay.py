@@ -5,13 +5,13 @@ class Delay(Command):
     """
     Waits for the given amount of time before proceeding to the next command
     """
-    def __init__(self, master, seconds: float):
+    def __init__(self, master, seconds):
         """
         Initializes a new Delay instance
         :param master: The Master instance
         :param seconds: The number of seconds to delay
         """
-        super().__init__(master)
+        super(Delay, self).__init__(master)
         self.delay_time = seconds
         self.seconds_passed = 0.0
 
@@ -27,21 +27,21 @@ class Delay(Command):
         """
         self.seconds_passed = 0.0
 
-    def update(self, delta_time: float):
+    def update(self, delta_time):
         """
         Updates the timer
         :param delta_time: The time passed since the last update
         """
         self.seconds_passed += delta_time
 
-    def get_status(self) -> CommandStatus:
+    def get_status(self):
         """
         Returns the status of this command
         :return: The status of this command
         """
         return CommandStatus.COMPLETED if self.seconds_passed >= self.delay_time else CommandStatus.RUNNING
 
-    def end(self, command_status: CommandStatus):
+    def end(self, command_status):
         """
         Not implemented
         """

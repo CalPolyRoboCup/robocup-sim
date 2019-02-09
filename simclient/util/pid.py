@@ -1,5 +1,5 @@
 class PID:
-    def __init__(self, p: float, i: float, d: float, min_out: float, max_out: float):
+    def __init__(self, p, i, d, min_out, max_out):
         """
         Initializes a new PID instance
         :param p: The potential parameter
@@ -17,7 +17,7 @@ class PID:
         self._last_error = 0
         self._integral = 0
 
-    def calculate(self, delta_time: float, input_val: float) -> float:
+    def calculate(self, delta_time, input_val):
         """
         Runs a PID iteration
         :param delta_time: The time passed since the last iteration

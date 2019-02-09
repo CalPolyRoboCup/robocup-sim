@@ -9,9 +9,9 @@ from proto.grSim_Commands_pb2 import grSim_Robot_Command
 
 from simclient.command import CommandStatus
 from simclient.team import Team
-from simclient.math.vector2 import Vector2
-from simclient.math.pid import PID
-from simclient.math.math_helper import MathHelper
+from simclient.util.vector2 import Vector2
+from simclient.util.pid import PID
+from simclient.util.math_helper import MathHelper
 
 
 class RobotTransform:
@@ -25,7 +25,7 @@ class RobotTransform:
         self.position = Vector2()
         self.orientation = 0
 
-    def set(self, position: Vector2, orientation: float):
+    def set(self, position, orientation):
         """
         Sets the position and orientation properties from the given position and orientation arguments
         :param position: The new position value
@@ -34,7 +34,7 @@ class RobotTransform:
         self.position.copy_from(position)
         self.orientation = orientation
 
-    def decode(self, det_robot: SSL_DetectionRobot):
+    def decode(self, det_robot):
         """
         Decodes an SSL_DetectionRobot packet and updates the transform information accordingly
         :param det_robot: The SSL_DetectionRobot packet to decode
@@ -42,7 +42,7 @@ class RobotTransform:
         self.position.set(det_robot.x, det_robot.y)
         self.orientation = det_robot.orientation
 
-    def copy_from(self, transform: 'RobotTransform'):
+    def copy_from(self, transform):
         """
         Copies the transform information from a RobotTransform into this instance
         :param transform: The RobotTransform from which to update this transform information
@@ -76,7 +76,7 @@ class Robot:
     YELLOW_TEAM_COLOR = (255, 255, 0)
     BLUE_TEAM_COLOR = (0, 0, 255)
 
-    def __init__(self, team: Team, det_robot: SSL_DetectionRobot):
+    def __init__(self, team, det_robot):
         """
         Initialize a new Robot instance
         :param team: The team the robot is on
@@ -104,21 +104,21 @@ class Robot:
         self._orientation_pid = PID(Robot.ORIENTATION_P, Robot.ORIENTATION_I, Robot.ORIENTATION_D,
                                     -Robot.MAX_ANGULAR_OUT, Robot.MAX_ANGULAR_OUT)
 
-    def set_target_speed(self, speed: float):
+    def set_target_speed(self, speed):
         """
         Sets the target speed of the robot
         :param speed: The speed of the robot
         """
         self._target_speed = speed
 
-    def set_target_direction(self, angle: float):
+    def set_target_direction(self, angle):
         """
         Sets the target direction of the robot
         :param angle: The direction of the robot in radians
         """
         self._target_direction = angle
 
-    def set_target_orientation(self, angle: float):
+    def set_target_orientation(self, angle):
         """
         Sets the target orientation of the robot
         :param angle: The orientation of the robot in radians
@@ -135,14 +135,14 @@ class Robot:
         # Update the orientation PID set point
         self._orientation_pid.set_point = angle
 
-    def set_kicker_speed(self, speed: float):
+    def set_kicker_speed(self, speed):
         """
         Sets the kicker speed of the robot
         :param speed: The speed to set the kicker
         """
         self._kicker_speed = speed
 
-    def write_output(self, robot_command: grSim_Robot_Command):
+    def write_output(self, robot_command):
         """
         Populates the given grSim_Robot_Command with the current outputs
         :param robot_command: The grSim_Robot_Command to populate
@@ -188,14 +188,14 @@ class Robot:
             self.logger.log(logging.WARNING, "Cannot run a Command that's already been assigned to"
                                              "another robot!")
 
-    def decode(self, det_robot: SSL_DetectionRobot):
+    def decode(self, det_robot):
         """
         Decodes an SSL_DetectionRobot packet
         :param det_robot: The SSL_DetectionRobot packet from which to update
         """
         self.transform.decode(det_robot)
 
-    def update_stats(self, delta_time: float):
+    def update_stats(self, delta_time):
         """
         Updates transform velocity information
         :param delta_time: The time passed since the last update
@@ -212,7 +212,7 @@ class Robot:
 
             self.last_transform.copy_from(self.transform)
 
-    def update_command(self, delta_time: float):
+    def update_command(self, delta_time):
         """
         Checks to see if there are any state changes to the active command, then updates the current command
         :param delta_time: The time passed since the last update

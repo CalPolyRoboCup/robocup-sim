@@ -1,3 +1,5 @@
+from abc import ABCMeta
+
 from proto.messages_robocup_ssl_wrapper_pb2 import SSL_WrapperPacket
 
 from simclient.master import Master
@@ -19,7 +21,7 @@ class Client(Master):
     """
     The class that manages graphics, input, running AI logic, and communicating with grSim
     """
-    def __init__(self, title: str, width: int, height: int, team: Team):
+    def __init__(self, title, width, height, team):
         """
         Initializes a new Client instance
         :param title: The title of the window
@@ -27,20 +29,20 @@ class Client(Master):
         :param height: The height of the window
         :param team: The team the client is controlling
         """
-        super().__init__(title, width, height, team)
+        super(Client, self).__init__(title, width, height, team)
         self.receiver = SimReceiver()
         self.receiver.open()
         self.sender = SimSender()
         self.sender.connect()
 
-    def update_ai(self, delta_time: float):
+    def update_ai(self, delta_time):
         """
         Updates AI logic
         :param delta_time: The time passed since the last update
         """
         pass
 
-    def receive_packet(self) -> SSL_WrapperPacket:
+    def receive_packet(self):
         """
         Receives and returns a packet from grSim
         :return: A new packet from grSim
@@ -58,7 +60,7 @@ class Client(Master):
         self.team_bots.write_output(sim_packet.commands.robot_commands)
         self.sender.send(sim_packet)
 
-    def init_team_robot(self, robot: Robot):
+    def init_team_robot(self, robot):
         """
         Initializes a new team robot when initially detected
         :param robot: The new robot
@@ -72,9 +74,12 @@ class Client(Master):
         # elif robot.id == 1:
         #     robot.run_command(MoveToMouse(self))
 
-    def init_other_robot(self, robot: Robot):
+    def init_other_robot(self, robot):
         """
         Initializes a new opponent robot when initially detected
         :param robot: The new robot
         """
         pass
+
+
+Master.register(Client)

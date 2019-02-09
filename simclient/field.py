@@ -23,7 +23,7 @@ class Field:
         self.field_lines = []
         self.field_arcs = []
 
-    def decode(self, field_size: SSL_GeometryFieldSize):
+    def decode(self, field_size):
         """
         Decodes the SSL_GeometryFieldSize packet, scaling the geometry to match the scale of the client
         :param field_size: The SSL_GeometryFieldSize packet to decode

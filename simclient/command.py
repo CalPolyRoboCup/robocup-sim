@@ -1,8 +1,7 @@
 from abc import *
-from enum import Enum
 
 
-class CommandStatus(Enum):
+class CommandStatus:
     """
     An enumeration used to indicate the status of a command
     """
@@ -12,7 +11,9 @@ class CommandStatus(Enum):
     INTERRUPTED = 3
 
 
-class Command(ABC):
+class Command(object):
+    __metaclass__ = ABCMeta
+
     """
     Used to define a core skill or behavior of a robot
     """
@@ -28,7 +29,7 @@ class Command(ABC):
 
         self._robot = None
 
-    def set_robot(self, robot) -> bool:
+    def set_robot(self, robot):
         """
         Sets the parent robot to the given robot, if possible
         :param robot: The robot to assign this command to
@@ -49,7 +50,7 @@ class Command(ABC):
         """
         return self._robot
 
-    def is_finished(self) -> bool:
+    def is_finished(self):
         """
         Returns true if the command has finished execution
         :return: True if the command has finished execution, otherwise False
@@ -71,7 +72,7 @@ class Command(ABC):
         pass
 
     @abstractmethod
-    def update(self, delta_time: float):
+    def update(self, delta_time):
         """
         Called continuously throughout the command's execution
         :param delta_time: The time passed since the last update
@@ -79,7 +80,7 @@ class Command(ABC):
         pass
 
     @abstractmethod
-    def get_status(self) -> CommandStatus:
+    def get_status(self):
         """
         Used to determine if this command has finished executing
         :return: True if the command has finished executing, otherwise False
@@ -87,7 +88,7 @@ class Command(ABC):
         return CommandStatus.RUNNING
 
     @abstractmethod
-    def end(self, command_status: CommandStatus):
+    def end(self, command_status):
         """
         Called when this command quits execution
         :param command_status: The status of the command when its execution was ended

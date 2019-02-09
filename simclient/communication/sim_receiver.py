@@ -45,7 +45,7 @@ class SimReceiver:
 
         self.socket.settimeout(SimReceiver.TIMEOUT)
 
-    def receive(self) -> SSL_WrapperPacket:
+    def receive(self):
         """
         Reads an SSL_WrapperPacket from grSim and returns the result
         :raise: RuntimeError if the connection has not been opened

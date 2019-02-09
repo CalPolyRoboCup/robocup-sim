@@ -2,7 +2,7 @@ import sys
 
 import pygame
 
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 
 from simclient.robot_manager import RobotManager
 from simclient.ball import Ball
@@ -13,7 +13,9 @@ from simclient.robot import Robot
 from proto.messages_robocup_ssl_wrapper_pb2 import SSL_WrapperPacket
 
 
-class Master(ABC):
+class Master(object):
+    __metaclass__ = ABCMeta
+
     """
     The class that manages graphics, input, and running AI logic
     """
@@ -23,7 +25,7 @@ class Master(ABC):
     MIN_SCALE = 0.05
     SCALE_RATE = 1.05
 
-    def __init__(self, title: str, width: int, height: int, team: Team):
+    def __init__(self, title, width, height, team):
         """
         Initializes a new Master instance
         :param title: The title of the window
@@ -112,7 +114,7 @@ class Master(ABC):
             # Decode field geometry information
             self.field.decode(wrapper_packet.geometry.field)
 
-    def update(self, delta_time: float):
+    def update(self, delta_time):
         """
         Update outgoing packet information for the controlled team
         :param delta_time: The amount of time passed since the last  update
@@ -141,7 +143,7 @@ class Master(ABC):
 
         pygame.display.flip()
 
-    def screen_point(self, x: float, y: float) -> (int, int):
+    def screen_point(self, x, y):
         """
         Converts real-life coordinates to screen coordinates
         :param x: The x-coordinate
@@ -150,7 +152,7 @@ class Master(ABC):
         """
         return int(round(x * self.scale + self.width * 0.5)), int(round(-y * self.scale + self.height * 0.5))
 
-    def screen_scalar(self, value: float) -> int:
+    def screen_scalar(self, value):
         """
         Converts a real-life scalar to a screen scalar
         :param value: The value to scale
@@ -159,28 +161,28 @@ class Master(ABC):
         return int(round(value * self.scale))
 
     @abstractmethod
-    def update_ai(self, delta_time: float):
+    def update_ai(self, delta_time):
         """
         Used to update AI logic
         """
         pass
 
     @abstractmethod
-    def init_team_robot(self, robot: Robot):
+    def init_team_robot(self, robot):
         """
         Called when SSL_Vision detects a new team robot on the field
         """
         pass
 
     @abstractmethod
-    def init_other_robot(self, robot: Robot):
+    def init_other_robot(self, robot):
         """
         Called when SSL_Vision detects a new opponent robot on the field
         """
         pass
 
     @abstractmethod
-    def receive_packet(self) -> SSL_WrapperPacket:
+    def receive_packet(self):
         """
         Used to receive packets from the vision system
         :return: A new vision packet

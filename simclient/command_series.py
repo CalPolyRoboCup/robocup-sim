@@ -1,13 +1,11 @@
 import logging
 
-from enum import Enum
-
 from abc import abstractmethod
 
 from .command import Command, CommandStatus
 
 
-class FailResponse(Enum):
+class FailResponse:
     """
     Used for defining how a command series should respond to a child command's failure
     """
@@ -25,7 +23,7 @@ class CommandSeries(Command):
         Initializes a new CommandSeries
         :param master: The master instance
         """
-        super().__init__(master)
+        super(CommandSeries, self).__init__(master)
         self.logger = logging.getLogger(__name__)
         self.command = None
         self.fail_response = None
@@ -33,7 +31,7 @@ class CommandSeries(Command):
         self.status = CommandStatus.RUNNING
         self.index = 0
 
-    def add_command(self, command: Command, fail_response=FailResponse.CONTINUE):
+    def add_command(self, command, fail_response=FailResponse.CONTINUE):
         """
         Adds a command to the command series, with an optional fail response
         :param command: The command to be executed
@@ -65,7 +63,7 @@ class CommandSeries(Command):
             self.command = None
             self.status = CommandStatus.COMPLETED
 
-    def update(self, delta_time: float):
+    def update(self, delta_time):
         """
         Updates the command series
         :param delta_time: The time passed since the last update
@@ -98,7 +96,7 @@ class CommandSeries(Command):
         # Update the active command
         self.command.update(delta_time)
 
-    def get_status(self) -> CommandStatus:
+    def get_status(self):
         """
         Returns the current status of the command series
         :return: The current status of the command series
@@ -106,14 +104,14 @@ class CommandSeries(Command):
         return self.status
 
     @abstractmethod
-    def end(self, command_status: CommandStatus):
+    def end(self, command_status):
         """
         Called when this command ends execution
         :param command_status: The status of the command when its execution was ended
         """
         pass
 
-    def _start_next(self, command_status: CommandStatus) -> bool:
+    def _start_next(self, command_status):
         """
         Attempts to start the next command in the series
         :return: True if the next command was started, False if there are no more commands in the series to start
@@ -128,3 +126,6 @@ class CommandSeries(Command):
         else:
             self.status = CommandStatus.COMPLETED
             return False
+
+
+Command.register(CommandSeries)
